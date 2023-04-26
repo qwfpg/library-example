@@ -12,6 +12,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public const ROLE_EMPLOYEE = 'employee';
+    public const ROLE_READER = 'reader';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -45,12 +48,11 @@ class User extends Authenticatable
 
     public function isReader()
     {
-        return $this->role === 'reader';
+        return $this->role === self::ROLE_READER;
     }
 
     public function isEmployee()
     {
-        return $this->role === 'employee';
+        return $this->role === self::ROLE_EMPLOYEE;
     }
-
 }

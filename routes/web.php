@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Passwords\Confirm;
 use App\Http\Livewire\Auth\Passwords\Email;
@@ -55,9 +59,13 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 });
 
-Route::middleware(['auth', 'employee'])->group(function () {
-//    Route::resource('books', BookController::class);
-//    Route::resource('categories', CategoryController::class);
-//    Route::resource('employees', EmployeeController::class);
-//    Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
+
+Route::group([
+    'prefix' => 'admin',
+    'middleware' => ['auth', 'employee']
+], function () {
+    Route::resource('books', BookController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('users', UserController::class);
+    Route::get('', [AdminController::class, 'index'])->name('admin');
 });
