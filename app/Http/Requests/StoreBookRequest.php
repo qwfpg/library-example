@@ -23,11 +23,9 @@ class StoreBookRequest extends FormRequest
     {
         return [
             'title' => 'required|max:255',
-//            'slug' => 'required|unique:books|max:255',
-//            'author' => 'required|max:255',
-//            'description' => 'nullable',
-//            'rating' => 'nullable|numeric|between:0,5',
-//            'cover' => 'nullable|image',
+            'author' => 'required|max:255',
+            'description' => 'nullable',
+            'cover' => 'nullable|image',
             'category_id' => 'required|exists:categories,id',
         ];
     }

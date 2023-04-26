@@ -1,7 +1,7 @@
 <div class="mb-4">
     <label for="{{$name}}"
            class="block">{{$title}}</label>
-    <input type="text"
+    <input type="{{$type}}"
            name="{{$name}}"
            id="{{$name}}"
            value="{{ $value }}"

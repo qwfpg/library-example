@@ -13,11 +13,13 @@ class Form extends Component
      */
     public string $action;
     public string $method;
+    public string $indexRoute;
 
-    public function __construct(string $action, string $method = 'POST')
+    public function __construct(string $action, string $method = 'POST', string $indexRoute = 'admin')
     {
         $this->action = $action;
         $this->method = $method;
+        $this->indexRoute = $indexRoute;
     }
 
     /**

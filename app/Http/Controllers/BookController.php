@@ -5,12 +5,21 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBookRequest;
 use App\Models\Book;
 use App\Models\Category;
+use App\Services\ImageServiceInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BookController extends Controller
 {
+    private ImageServiceInterface $imageService;
+
+    public function __construct(ImageServiceInterface $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +39,8 @@ class BookController extends Controller
 
         return $this->getView('books.edit', [
             'categories' => $categories,
-            'title' => 'Create new book'
+            'title' => 'Create new book',
+            'action' => 'books.store',
         ]);
     }
 
@@ -39,26 +49,15 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request): RedirectResponse
     {
+        $validated = $request->validated();
+        $book = new Book($validated);
+
         if ($request->hasFile('cover')) {
-            $cover = $request->file('cover');
-            $coverName = time() . '-' . $cover->getClientOriginalName();
-            $cover->storeAs('public/covers', $coverName);
-        } else {
-            $coverName = null;
+            $image = $request->file('cover');
+            $path = $this->imageService->saveImage($image, 'covers');
+            $book->cover = $path;
         }
-
-        $book = new Book([
-            'title' => $request->input('title'),
-            'slug' => $request->input('slug'),
-            'author' => $request->input('author'),
-            'description' => $request->input('description'),
-            'rating' => $request->input('rating'),
-            'cover' => $coverName,
-            'category_id' => $request->input('category_id'),
-        ]);
-
         $book->save();
-
         return redirect()->route('books.index')->with('success', 'Book created successfully.');
     }
 
@@ -80,7 +79,9 @@ class BookController extends Controller
         return $this->getView('books.edit', [
                 'categories' => $categories,
                 'book' => $book,
-                'title' => 'Edit book'
+                'title' => 'Edit book',
+                'action' => 'books.update',
+                'method' => 'PATCH'
             ]
         );
     }
@@ -88,15 +89,34 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book)
+    public function update(StoreBookRequest $request, Book $book)
     {
-        //
+        $validated = $request->validated();
+
+        if ($request->hasFile('cover')) {
+            if ($book->cover) {
+                $this->imageService->deleteImage($book->cover);
+            }
+            $image = $request->file('cover');
+            $path = $this->imageService->saveImage($image, 'covers');
+            $validated['cover'] = $path;
+        }
+
+        $book->fill($validated);
+//        $book->slug = Str::slug($validated['title']);
+
+        $book->save();
+
+        return redirect()
+            ->route('books.index')
+            ->with('success', 'Книга успешно обновлена.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book): RedirectResponse
     {
         $book->delete();
         return redirect()->route('books.index')->with('success', 'Книга успешно удалена.');
