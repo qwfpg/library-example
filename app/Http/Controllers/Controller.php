@@ -15,10 +15,10 @@ class Controller extends BaseController
 
     protected function getView(string $name, array $data = []): ViewContract
     {
-        return View::make($name, array_merge($data, $this->getCommonViewData()));
+        return View::make($name, array_merge($data, $this->getNavMenu()));
     }
 
-    private function getCommonViewData(): array
+    private function getNavMenu(): array
     {
         return [
             'navigation' => [

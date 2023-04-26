@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -29,7 +30,7 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCategoryRequest $request): \Illuminate\Http\RedirectResponse
+    public function store(StoreCategoryRequest $request): RedirectResponse
     {
         $category = new Category([
             'title' => $request->input('title')
@@ -68,6 +69,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return redirect()->route('categories.index')->with('success', 'Категория успешно удалена.');
     }
 }

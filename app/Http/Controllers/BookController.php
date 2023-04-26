@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBookRequest;
 use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -33,7 +34,7 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBookRequest $request)
+    public function store(StoreBookRequest $request): RedirectResponse
     {
         if ($request->hasFile('cover')) {
             $cover = $request->file('cover');
@@ -71,7 +72,8 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        //
+        $categories = Category::all();
+        return $this->getView('books.edit', compact('categories', 'book'));
     }
 
     /**
@@ -87,6 +89,7 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return redirect()->route('books.index')->with('success', 'Книга успешно удалена.');
     }
 }

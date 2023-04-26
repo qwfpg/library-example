@@ -20,7 +20,6 @@
                     <td class="px-4 py-2">{{ $book->title }}</td>
                     <td class="px-4 py-2">{{ $book->author }}</td>
                     <td class="px-4 py-2">
-                        <a href="{{ route('books.show', $book->id) }}" class="text-blue-500">View</a> |
                         <a href="{{ route('books.edit', $book->id) }}" class="text-green-500">Edit</a> |
                         <form action="{{ route('books.destroy', $book->id) }}" method="POST" class="inline">
                             @csrf
