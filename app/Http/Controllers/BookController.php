@@ -28,7 +28,10 @@ class BookController extends Controller
     {
         $categories = Category::all();
 
-        return $this->getView('books.create', compact('categories'));
+        return $this->getView('books.edit', [
+            'categories' => $categories,
+            'title' => 'Create new book'
+        ]);
     }
 
     /**
@@ -70,10 +73,16 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book)
+    public function edit(Book $book): View
     {
         $categories = Category::all();
-        return $this->getView('books.edit', compact('categories', 'book'));
+
+        return $this->getView('books.edit', [
+                'categories' => $categories,
+                'book' => $book,
+                'title' => 'Edit book'
+            ]
+        );
     }
 
     /**

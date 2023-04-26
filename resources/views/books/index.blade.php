@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="container mx-auto">
+
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Books</h1>
             <a href="{{ route('books.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded">Add New Book</a>
