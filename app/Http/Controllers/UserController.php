@@ -45,13 +45,16 @@ class UserController extends Controller
         $user = new User($validated);
         $password = Str::random(10);
         $user->password = bcrypt($password);
-        $user->save();
 
         if ($user->isEmployee()) {
             $token = Password::broker()->createToken($user);
-            $user->notify(new NewEmployeeNotification($user, $token));
+            try {
+                $user->notify(new NewEmployeeNotification($user, $token));
+            } catch (\Exception $e) {
+                return redirect()->route('users.index')->with('error', 'Something went wrong');
+            }
         }
-
+        $user->save();
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
