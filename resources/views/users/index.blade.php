@@ -4,7 +4,7 @@
     <div class="container mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Users</h1>
-            <a href="{{ route('users.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded">Add New Book</a>
+            <a href="{{ route('users.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded">Add New User</a>
         </div>
         <table class="w-full table-auto">
             <thead>
@@ -22,7 +22,6 @@
                     <td class="px-4 py-2">{{ $user->email }}</td>
                     <td class="px-4 py-2">{{ $user->role}}</td>
                     <td class="px-4 py-2">
-                        <a href="{{ route('users.show', $user->id) }}" class="text-blue-500">View</a> |
                         <a href="{{ route('users.edit', $user->id) }}" class="text-green-500">Edit</a> |
                         <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
                             @csrf

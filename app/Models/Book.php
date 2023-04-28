@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use function PHPUnit\Framework\isNull;
 
-class Book extends Model
+class Book extends SluggableModel
 {
     use HasFactory;
 
     protected $fillable = [
         'title',
-//        'slug',
         'author',
         'description',
         'rating',
@@ -21,10 +21,26 @@ class Book extends Model
         'category_id'
     ];
 
-
-    public function categories(): BelongsToMany
+    public function category(): BelongsTo
     {
-        return $this->belongsToMany(Category::class, 'book_category');
+        return $this->belongsTo(Category::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+    }
+
+    public function getCover(): string
+    {
+        if (isNull($this->cover)) {
+            return asset('images/default-cover.jpg');
+        }
+        return asset('storage/' . $this->cover);
+    }
+
+    protected function getSluggableValue(): string
+    {
+        return $this->title;
+    }
 }

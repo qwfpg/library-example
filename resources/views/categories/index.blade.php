@@ -18,7 +18,6 @@
                 <tr class="bg-white border-b border-gray-200">
                     <td class="px-4 py-2">{{ $category->title }}</td>
                     <td class="px-4 py-2">
-                        <a href="{{ route('categories.show', $category->id) }}" class="text-blue-500">View</a> |
                         <a href="{{ route('categories.edit', $category->id) }}" class="text-green-500">Edit</a> |
                         <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="inline">
                             @csrf

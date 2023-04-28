@@ -14,11 +14,12 @@
                     <div class="hidden md:block">
 
                         <div class="ml-10 flex items-baseline space-x-4">
-                            @foreach($navigation as $navigationItemKey => $navigationItemValue)
-                                <a href="{{route($navigationItemKey)}}"
-                                   class="{{Route::is($navigationItemKey) ? 'bg-gray-900' : 'hover:text-white' }} text-white rounded-md px-3 py-2 text-sm font-medium"
-                                    {{Route::is($navigationItemKey) ? 'aria-current="page"' : ''}}>{{$navigationItemValue}}</a>
-                            @endforeach
+                            <x-menu-item name="Books"
+                                         route="books.index"/>
+                            <x-menu-item name="Categories"
+                                         route="categories.index"/>
+                            <x-menu-item name="Users"
+                                         route="users.index"/>
                         </div>
                     </div>
                 </div>

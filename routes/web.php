@@ -5,6 +5,9 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ImportBooksController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Passwords\Confirm;
@@ -57,6 +60,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', LogoutController::class)
         ->name('logout');
+    Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
+
 });
 
 
@@ -68,4 +73,10 @@ Route::group([
     Route::resource('categories', CategoryController::class);
     Route::resource('users', UserController::class);
     Route::get('', [AdminController::class, 'index'])->name('admin');
+    Route::post('import-books', [ImportBooksController::class, 'import'])->name('import_books');
 });
+
+Route::get('', [PageController::class, 'getHomePage'])->name('home');
+Route::get('/books/{slug}', [PageController::class, 'getBookShowPage'])->name('site-books.show');
+Route::get('/categories', [PageController::class, 'getCategoryIndexPage'])->name('site-categories.index');
+Route::get('/books/categories/{slug}', [PageController::class, 'getBooksIndexPageByCategorySlug'])->name('category-books.index');

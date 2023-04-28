@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -15,8 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(10);
-        return $this->getView('categories.index', compact('categories'));
+        $categories = Category::latest()->paginate(10);
+        return view('categories.index', compact('categories'));
     }
 
     /**
@@ -24,7 +25,10 @@ class CategoryController extends Controller
      */
     public function create(): View
     {
-        return $this->getView('categories.create');
+        return view('categories.edit', [
+            'title' => 'Create new category',
+            'action' => 'categories.store',
+        ]);
     }
 
     /**
@@ -32,9 +36,9 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
-        $category = new Category([
-            'title' => $request->input('title')
-        ]);
+        $validated = $request->validated();
+
+        $category = new Category($validated);
         $category->save();
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');

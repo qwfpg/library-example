@@ -18,8 +18,16 @@
                      :value="$book->author ?? ''"
                      required
             />
+            <x-input title="Rating"
+                     name="rating"
+                     min=0
+                     max=5
+                     type="number"
+                     :value="$book->rating ?? '0'"
+                     required
+            />
             @if($book->cover ?? false)
-                <img src="{{ asset('storage/' . $book->cover) }}" alt="Обложка книги">
+                <img src="{{ asset('storage/' . $book->cover) }}" alt="Book cover">
             @endif
             <x-input title="Cover"
                      name="cover"

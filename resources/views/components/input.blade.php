@@ -5,6 +5,8 @@
            name="{{$name}}"
            id="{{$name}}"
            value="{{ $value }}"
+           {{isset($min) ? 'min=' . $min : ''}}
+           {{isset($max) ? 'max=' . $max : ''}}
            class="w-full"
         {{$required === true ? 'required' : ''}}
     >

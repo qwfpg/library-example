@@ -25,9 +25,9 @@ class BookController extends Controller
      */
     public function index(): View
     {
-        $books = Book::paginate(10);
+        $books = Book::latest()->paginate(10);
 
-        return $this->getView('books.index', compact('books'));
+        return view('books.index', compact('books'));
     }
 
     /**
@@ -37,7 +37,7 @@ class BookController extends Controller
     {
         $categories = Category::all();
 
-        return $this->getView('books.edit', [
+        return view('books.edit', [
             'categories' => $categories,
             'title' => 'Create new book',
             'action' => 'books.store',
@@ -57,16 +57,9 @@ class BookController extends Controller
             $path = $this->imageService->saveImage($image, 'covers');
             $book->cover = $path;
         }
+
         $book->save();
         return redirect()->route('books.index')->with('success', 'Book created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Book $book)
-    {
-        //
     }
 
     /**
@@ -76,7 +69,7 @@ class BookController extends Controller
     {
         $categories = Category::all();
 
-        return $this->getView('books.edit', [
+        return view('books.edit', [
                 'categories' => $categories,
                 'book' => $book,
                 'title' => 'Edit book',
@@ -89,7 +82,7 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreBookRequest $request, Book $book)
+    public function update(StoreBookRequest $request, Book $book): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -103,15 +96,13 @@ class BookController extends Controller
         }
 
         $book->fill($validated);
-//        $book->slug = Str::slug($validated['title']);
-
+        $book->slug = Str::slug($validated['title']);
         $book->save();
 
         return redirect()
             ->route('books.index')
-            ->with('success', 'Книга успешно обновлена.');
+            ->with('success', 'Book updated successfully.');
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -119,6 +110,8 @@ class BookController extends Controller
     public function destroy(Book $book): RedirectResponse
     {
         $book->delete();
-        return redirect()->route('books.index')->with('success', 'Книга успешно удалена.');
+        return redirect()
+            ->route('books.index')
+            ->with('success', 'Book deleted successfully.');
     }
 }

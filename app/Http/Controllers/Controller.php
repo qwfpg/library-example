@@ -12,22 +12,4 @@ use \Illuminate\Contracts\View\View as ViewContract;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-    protected function getView(string $name, array $data = []): ViewContract
-    {
-        return View::make($name, array_merge($data, $this->getNavMenu()));
-    }
-
-    private function getNavMenu(): array
-    {
-        return [
-            'navigation' => [
-                'admin' => 'Dashboard',
-                'users.index' => 'Users',
-                'books.index' => 'Books',
-                'categories.index' => 'Categories'
-            ]
-        ];
-    }
-
 }
