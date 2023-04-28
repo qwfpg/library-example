@@ -47,7 +47,7 @@ class UserController extends Controller
         $user->password = bcrypt($password);
         $user->save();
 
-        if ($user->role == 'employee') {
+        if ($user->isEmployee()) {
             $token = Password::broker()->createToken($user);
             $user->notify(new NewEmployeeNotification($user, $token));
         }
@@ -77,13 +77,6 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $validated = $request->validated();
-
-        if ($request->filled('password')) {
-            $password = bcrypt($validated['password']);
-            $validated['password'] = $password;
-        } else {
-            unset($validated['password']);
-        }
         $user->update($validated);
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }

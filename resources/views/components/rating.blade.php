@@ -1,8 +1,7 @@
 @for ($i = 1; $i <= 5; $i++)
     @if ($i <= $rating)
-        <i style="font-style: normal">⭐</i>
-
+        <i class="fa fa-star checked"></i>
     @else
-        <i style="font-style: normal">☆</i>
+        <i class="fa fa-star"></i>
     @endif
 @endfor

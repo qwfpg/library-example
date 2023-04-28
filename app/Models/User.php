@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->role === UserRoles::Employee->value;
     }
+
+    public function isReader(): bool
+    {
+        return $this->role === UserRoles::Reader->value;
+    }
 }

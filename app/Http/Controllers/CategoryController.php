@@ -57,15 +57,22 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('categories.edit', [
+                'category' => $category,
+                'title' => 'Edit category',
+                'action' => 'categories.update',
+                'method' => 'PATCH'
+            ]
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(StoreCategoryRequest $request, Category $category)
     {
-        //
+        $category->update($request->validated());
+        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
     /**
@@ -74,6 +81,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Категория успешно удалена.');
+        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

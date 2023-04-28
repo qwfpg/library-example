@@ -13,11 +13,16 @@ class ImportBooksController extends Controller
         $file = $request->file('import_file');
 
         if ($file) {
-            Excel::import(new BooksImport, $file);
+            try {
+                Excel::import(new BooksImport, $file);
+            }
+            catch (\Exception $e) {
+                return redirect()->back()->with(['error' => 'The file could not be processed.']);
+            }
 
-            return redirect()->back()->with('success', 'Книги успешно импортированы.');
+            return redirect()->back()->with('success', 'The books have been successfully imported.');
         }
 
-        return redirect()->back()->withErrors(['import_file' => 'Не удалось загрузить файл.']);
+        return redirect()->back()->with(['error' => 'Failed to upload file.']);
     }
 }
