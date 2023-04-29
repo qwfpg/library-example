@@ -23,8 +23,12 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (DatabaseException $exception) {
+            return back()->with('error', $exception->getMessage());
+        });
+
+        $this->renderable(function (NotificationSendingException $exception, $request) {
+            return back()->with('error', $exception->getMessage());
         });
     }
 }

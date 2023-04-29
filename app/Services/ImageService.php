@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ImageService implements ImageServiceInterface
 {
-
     public function saveImage(UploadedFile $file, string $folder): string
     {
         return $file->store($folder, 'public');

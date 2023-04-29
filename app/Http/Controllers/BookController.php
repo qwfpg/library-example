@@ -4,38 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookRequest;
 use App\Models\Book;
-use App\Models\Category;
+use App\Repositories\BookRepositoryInterface;
+use App\Repositories\CategoryRepositoryInterface;
 use App\Services\ImageServiceInterface;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
-class BookController extends Controller
+class BookController extends ModelController
 {
-    private ImageServiceInterface $imageService;
 
-    public function __construct(ImageServiceInterface $imageService)
+    public function __construct(
+        private readonly CategoryRepositoryInterface $categoryRepository,
+        private readonly ImageServiceInterface       $imageService,
+        BookRepositoryInterface                      $repository,
+    )
     {
-        $this->imageService = $imageService;
+        parent::__construct($repository);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(): View
     {
-        $books = Book::latest()->paginate(10);
-
+        $books = $this->repository->paginate(10);
         return view('books.index', compact('books'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View|Application|Factory|ApplicationContract
     {
-        $categories = Category::all();
+        $categories = $this->categoryRepository->all();
 
         return view('books.edit', [
             'categories' => $categories,
@@ -44,30 +43,23 @@ class BookController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreBookRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        $book = new Book($validated);
 
         if ($request->hasFile('cover')) {
             $image = $request->file('cover');
             $path = $this->imageService->saveImage($image, 'covers');
-            $book->cover = $path;
+            $validated['cover'] = $path;
         }
+        $this->repository->create($validated);
 
-        $book->save();
         return redirect()->route('books.index')->with('success', 'Book created successfully.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Book $book): View
     {
-        $categories = Category::all();
+        $categories = $this->categoryRepository->all();
 
         return view('books.edit', [
                 'categories' => $categories,
@@ -79,9 +71,6 @@ class BookController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(StoreBookRequest $request, Book $book): RedirectResponse
     {
         $validated = $request->validated();
@@ -94,22 +83,20 @@ class BookController extends Controller
             $path = $this->imageService->saveImage($image, 'covers');
             $validated['cover'] = $path;
         }
-
-        $book->fill($validated);
-        $book->slug = Str::slug($validated['title']);
-        $book->save();
+        $this->repository->update($book, $validated);
 
         return redirect()
             ->route('books.index')
             ->with('success', 'Book updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Book $book): RedirectResponse
     {
-        $book->delete();
+        if ($book->cover) {
+            $this->imageService->deleteImage($book->cover);
+        }
+        $this->repository->delete($book);
+
         return redirect()
             ->route('books.index')
             ->with('success', 'Book deleted successfully.');

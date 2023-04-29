@@ -14,12 +14,12 @@ class NewEmployeeNotification extends Notification implements ShouldQueue
     use Queueable;
 
     private User $user;
-    private $token;
+    private string $url;
 
-    public function __construct(User $user, $token)
+    public function __construct(User $user, string $url)
     {
         $this->user = $user;
-        $this->token = $token;
+        $this->url = $url;
     }
 
     public function via($notifiable)
@@ -29,15 +29,9 @@ class NewEmployeeNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable): MailMessage
     {
-        $url = url(route('password.reset', [
-                'token' => $this->token,
-                'email' => $this->user->email,
-            ], false)
-        );
-
         return (new MailMessage)
             ->line('You have been added as a new employee.')
-            ->action('Sign in', $url)
+            ->action('Sign in', $this->url)
             ->line('Thank you for using our app!');
     }
 

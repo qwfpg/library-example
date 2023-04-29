@@ -4,25 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category;
+use App\Repositories\CategoryRepositoryInterface;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
-class CategoryController extends Controller
+class CategoryController extends ModelController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct(CategoryRepositoryInterface $repository)
     {
-        $categories = Category::latest()->paginate(10);
+        parent::__construct($repository);
+    }
+
+    public function index(): View|Application|Factory|ApplicationContract
+    {
+        $categories = $this->repository->paginate(10);
         return view('categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create(): View
     {
         return view('categories.edit', [
@@ -31,31 +33,15 @@ class CategoryController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-
-        $category = new Category($validated);
-        $category->save();
+        $this->repository->create($validated);
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
+    public function edit(Category $category): View|Application|Factory|ApplicationContract
     {
         return view('categories.edit', [
                 'category' => $category,
@@ -66,21 +52,15 @@ class CategoryController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(StoreCategoryRequest $request, Category $category)
+    public function update(StoreCategoryRequest $request, Category $category): RedirectResponse
     {
-        $category->update($request->validated());
+        $this->repository->update($category, $request->validated());
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category)
+    public function destroy(Category $category): RedirectResponse
     {
-        $category->delete();
+        $this->repository->delete($category);
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

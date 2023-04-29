@@ -13,6 +13,7 @@ class Category extends SluggableModel
     {
         return $this->hasMany(Book::class);
     }
+
     protected $fillable = [
         'title'
     ];

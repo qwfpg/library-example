@@ -3,10 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use function PHPUnit\Framework\isNull;
 
 class Book extends SluggableModel
 {
@@ -33,7 +31,7 @@ class Book extends SluggableModel
 
     public function getCover(): string
     {
-        if (isNull($this->cover)) {
+        if (!$this->cover) {
             return asset('images/default-cover.jpg');
         }
         return asset('storage/' . $this->cover);
