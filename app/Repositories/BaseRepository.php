@@ -31,9 +31,9 @@ class BaseRepository implements RepositoryInterface
         return $this->model->all();
     }
 
-    public function find(int $id): ?Model
+    public function findByTitle(string $title): ?Model
     {
-        return $this->model->find($id);
+        return $this->model->where('title', $title)->first();
     }
 
     public function create(array $attributes): Model

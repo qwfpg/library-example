@@ -2,42 +2,40 @@
 
 namespace App\Imports;
 
-use App\Models\Book;
-use App\Models\Category;
+use App\Repositories\BookRepositoryInterface;
+use App\Repositories\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 class BooksImport implements ToCollection
 {
+    public function __construct(
+        private readonly BookRepositoryInterface     $bookRepository,
+        private readonly CategoryRepositoryInterface $categoryRepository
+    )
+    {
+    }
+
     public function collection(Collection $rows): void
     {
         foreach ($rows as $row) {
             $bookTitle = $row[0];
             $authorName = $row[1];
             $categoryTitle = $row[3];
-            $category = Category::where('title', $categoryTitle)->first();
-
+            $category = $this->categoryRepository->findByTitle($categoryTitle);
             if (!$category) {
-                $category = new Category();
-                $category->title = $categoryTitle;
-                $category->slug = Str::slug($categoryTitle);
-                $category->save();
+                $category = $this->categoryRepository->create(['title' => $categoryTitle]);
             }
-
-            $book = Book::where('title', $bookTitle)->first();
+            $book = $this->bookRepository->findByTitle($bookTitle);
             if ($book) {
                 continue;
             }
-            $book = new Book([
+            $this->bookRepository->create([
                 'title' => $bookTitle,
                 'author' => $authorName,
-                'slug' => Str::slug($bookTitle),
-                'rating' => 1
+                'rating' => 0,
+                'category_id' => $category->id
             ]);
-
-            $book->category_id = $category->id;
-            $book->save();
         }
     }
 }
