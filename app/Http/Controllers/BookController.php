@@ -15,7 +15,6 @@ use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 class BookController extends ModelController
 {
-
     public function __construct(
         private readonly CategoryRepositoryInterface $categoryRepository,
         private readonly ImageServiceInterface       $imageService,
@@ -24,7 +23,6 @@ class BookController extends ModelController
     {
         parent::__construct($repository);
     }
-
 
     public function index(): View
     {
@@ -64,7 +62,7 @@ class BookController extends ModelController
         return view('books.edit', [
                 'categories' => $categories,
                 'book' => $book,
-                'title' => 'Edit book',
+                'title' => 'Edit book ' . $book->title,
                 'action' => 'books.update',
                 'method' => 'PATCH'
             ]

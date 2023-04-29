@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\BookResource;
+use App\Http\Controllers\ModelController;
 use App\Http\Resources\CategoryResource;
-use App\Models\Book;
-use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Repositories\CategoryRepositoryInterface;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class CategoryController extends Controller
+class CategoryController extends ModelController
 {
-    public function index()
+    public function __construct(CategoryRepositoryInterface $repository)
     {
-        $categories = Category::paginate(10);
+        parent::__construct($repository);
+    }
+
+    public function index(): AnonymousResourceCollection
+    {
+        $categories = $this->repository->paginate(10);
         return CategoryResource::collection($categories);
     }
 }

@@ -27,7 +27,7 @@ class Handler extends ExceptionHandler
             return back()->with('error', $exception->getMessage());
         });
 
-        $this->renderable(function (NotificationSendingException $exception, $request) {
+        $this->renderable(function (NotificationSendingException $exception) {
             return back()->with('error', $exception->getMessage());
         });
     }

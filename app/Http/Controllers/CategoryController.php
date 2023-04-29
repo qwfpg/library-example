@@ -24,7 +24,6 @@ class CategoryController extends ModelController
         return view('categories.index', compact('categories'));
     }
 
-
     public function create(): View
     {
         return view('categories.edit', [
@@ -45,7 +44,7 @@ class CategoryController extends ModelController
     {
         return view('categories.edit', [
                 'category' => $category,
-                'title' => 'Edit category',
+                'title' => 'Edit category ' . $category->title,
                 'action' => 'categories.update',
                 'method' => 'PATCH'
             ]
@@ -55,12 +54,14 @@ class CategoryController extends ModelController
     public function update(StoreCategoryRequest $request, Category $category): RedirectResponse
     {
         $this->repository->update($category, $request->validated());
+
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
     public function destroy(Category $category): RedirectResponse
     {
         $this->repository->delete($category);
+        
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

@@ -53,7 +53,7 @@ class UserController extends ModelController
     {
         return view('users.edit', [
             'user' => $user,
-            'title' => 'Edit user',
+            'title' => 'Edit user ' . $user->name,
             'action' => 'users.update',
             'method' => 'PATCH'
         ]);

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\BookController;
@@ -61,7 +60,6 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', LogoutController::class)
         ->name('logout');
     Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
-
 });
 
 
@@ -69,11 +67,13 @@ Route::group([
     'prefix' => 'admin',
     'middleware' => ['auth', 'employee']
 ], function () {
+    Route::get('/', function () {
+        return redirect()->route('books.index');
+    });
     Route::resource('books', BookController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('users', UserController::class);
-    Route::get('', [AdminController::class, 'index'])->name('admin');
-    Route::post('import-books', [ImportBooksController::class, 'import'])->name('import_books');
+    Route::post('import-books', [ImportBooksController::class, 'import'])->name('import-books');
 });
 
 Route::get('', [PageController::class, 'getHomePage'])->name('home');

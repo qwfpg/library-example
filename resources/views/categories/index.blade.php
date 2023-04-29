@@ -1,10 +1,11 @@
-@extends('layouts.admin')
+@extends('admin.layouts.app')
 
 @section('content')
     <div class="container mx-auto">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Books</h1>
-            <a href="{{ route('categories.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded">Add New Category</a>
+            <h1 class="text-2xl font-bold">Categories</h1>
+            <a href="{{ route('categories.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded">Add New
+                Category</a>
         </div>
         <table class="w-full table-auto">
             <thead>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('admin.layouts.app')
 
 @section('content')
     <div class="container mx-auto">
@@ -6,11 +6,12 @@
             <h1 class="text-2xl font-bold">Books</h1>
             <a href="{{ route('books.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded">Add New Book</a>
         </div>
-        <form action="{{ route('import_books') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('import-books') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="mb-4">
                 <label for="import_file" class="block text-sm font-medium text-gray-700">Choose file to import</label>
-                <input type="file" id="import_file" required name="import_file" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <input type="file" id="import_file" required name="import_file"
+                       class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
             </div>
             <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Import books</button>
         </form>

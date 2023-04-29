@@ -8,8 +8,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-//use Maatwebsite\Excel\Concerns\WithHeadingRow;
-
 class BooksImport implements ToCollection
 {
     public function collection(Collection $rows): void
@@ -26,7 +24,7 @@ class BooksImport implements ToCollection
                 $category->slug = Str::slug($categoryTitle);
                 $category->save();
             }
-            
+
             $book = Book::where('title', $bookTitle)->first();
             if ($book) {
                 continue;

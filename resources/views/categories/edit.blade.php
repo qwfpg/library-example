@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-
+@extends('admin.layouts.app')
+@section('title' , $title )
 @section('content')
     <div class="container mx-auto">
         <h1 class="text-2xl font-bold mb-6">{{$title}}</h1>
@@ -11,7 +11,6 @@
                      name="title"
                      :value="$category->title ?? ''"
                      required
-
             />
         </x-form>
     </div>
