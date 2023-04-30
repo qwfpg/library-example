@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\CoverImageService;
+use App\Services\CoverImageServiceInterface;
 use App\Services\EmployeeLoginLinkSender;
 use App\Services\EmployeeLoginLinkSenderInterface;
 use App\Services\ImageService;
@@ -15,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(ImageServiceInterface::class, ImageService::class);
+        $this->app->singleton(CoverImageServiceInterface::class, CoverImageService::class);
         $this->app->singleton(EmployeeLoginLinkSenderInterface::class, EmployeeLoginLinkSender::class);
     }
 

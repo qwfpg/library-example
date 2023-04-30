@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Repositories\BookRepositoryInterface;
 use App\Repositories\CategoryRepositoryInterface;
-use App\Services\ImageServiceInterface;
+use App\Services\CoverImageService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -17,7 +18,7 @@ class BookController extends ModelController
 {
     public function __construct(
         private readonly CategoryRepositoryInterface $categoryRepository,
-        private readonly ImageServiceInterface       $imageService,
+        private readonly CoverImageService           $coverImageService,
         BookRepositoryInterface                      $repository,
     )
     {
@@ -44,12 +45,7 @@ class BookController extends ModelController
     public function store(StoreBookRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-
-        if ($request->hasFile('cover')) {
-            $image = $request->file('cover');
-            $path = $this->imageService->saveImage($image, 'covers');
-            $validated['cover'] = $path;
-        }
+        $validated['cover'] = $this->coverImageService->handleImageStore($request, 'cover', 'covers');
         $this->repository->create($validated);
 
         return redirect()->route('books.index')->with('success', 'Book created successfully.');
@@ -69,18 +65,10 @@ class BookController extends ModelController
         );
     }
 
-    public function update(StoreBookRequest $request, Book $book): RedirectResponse
+    public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
         $validated = $request->validated();
-
-        if ($request->hasFile('cover')) {
-            if ($book->cover) {
-                $this->imageService->deleteImage($book->cover);
-            }
-            $image = $request->file('cover');
-            $path = $this->imageService->saveImage($image, 'covers');
-            $validated['cover'] = $path;
-        }
+        $validated['cover'] = $this->coverImageService->handleImageUpdate($request, $book->cover, 'cover', 'covers');
         $this->repository->update($book, $validated);
 
         return redirect()
@@ -90,9 +78,7 @@ class BookController extends ModelController
 
     public function destroy(Book $book): RedirectResponse
     {
-        if ($book->cover) {
-            $this->imageService->deleteImage($book->cover);
-        }
+        $this->coverImageService->handleImageDelete($book->cover);
         $this->repository->delete($book);
 
         return redirect()

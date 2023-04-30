@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Repositories\CategoryRepositoryInterface;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
@@ -51,7 +52,7 @@ class CategoryController extends ModelController
         );
     }
 
-    public function update(StoreCategoryRequest $request, Category $category): RedirectResponse
+    public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
         $this->repository->update($category, $request->validated());
 
@@ -61,7 +62,7 @@ class CategoryController extends ModelController
     public function destroy(Category $category): RedirectResponse
     {
         $this->repository->delete($category);
-        
+
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->string('author');
             $table->text('description')->nullable();
-            $table->decimal('rating', 3, 2)->nullable();
+            $table->integer('rating')->default(0);
             $table->string('cover')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->timestamps();
