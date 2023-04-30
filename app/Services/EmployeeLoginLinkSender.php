@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Password;
 
 class EmployeeLoginLinkSender implements EmployeeLoginLinkSenderInterface
 {
-
     public function sendLoginLink(User $user): void
     {
         if (!$user->isEmployee()) {
@@ -21,7 +20,6 @@ class EmployeeLoginLinkSender implements EmployeeLoginLinkSenderInterface
                 'email' => $user->email,
             ], false)
         );
-
 
         try {
             $user->notify(new NewEmployeeNotification($user, $url));
