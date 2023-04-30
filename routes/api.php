@@ -44,8 +44,9 @@ Route::middleware(['auth:sanctum', 'employee'])->group(function () {
     Route::post('books', [BookController::class, 'store']);
     Route::post('books/{book}', [BookController::class, 'update']);
     Route::delete('books/{book}', [BookController::class, 'destroy']);
-
     Route::apiResource('users', UserController::class);
+    Route::apiResource('categories', CategoryController::class)->only(['store', 'update', 'destroy']);
 });
 
 Route::apiResource('books', BookController::class)->only('index', 'show');
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
