@@ -8,18 +8,16 @@
             <div class="flex">
                 <img src="{{ $book->getCover() }}" alt="{{ $book->title }}" class="w-1/3 rounded-lg mr-6">
                 <div class="flex flex-col justify-between">
-                    <div>
-                        <h2 class="text-2xl font-bold mb-2">{{ $book->title }}</h2>
-                        <p class="text-lg text-gray-700 mb-4">by {{ $book->author }}</p>
-                        <p class="text-gray-700 font-semibold">
-                            <a href="{{route('category-books.index', $book->category->slug)}}">
-                                Category: {{ $book->category->title }}
-                            </a></p>
-                        <p class="text-gray-700 font-semibold">Rating:
-                            <x-rating :rating="$book->rating"/>
-                        </p>
-                        <p class="text-gray-600 mt-4">{{ $book->description }}</p>
-                    </div>
+                    <h2 class="text-2xl font-bold mb-2">{{ $book->title }}</h2>
+                    <p class="text-lg text-gray-700 mb-4">by {{ $book->author }}</p>
+                    <p class="text-gray-700 font-semibold">
+                        <a href="{{route('category-books.index', $book->category->slug)}}">
+                            Category: {{ $book->category->title }}
+                        </a></p>
+                    <p class="text-gray-700 font-semibold">Rating:
+                        <x-rating :rating="$book->rating"/>
+                    </p>
+                    <p class="text-gray-600 mt-4 break-words overflow-wrap">{{ $book->description }}</p>
                 </div>
             </div>
             <div class="mt-8">

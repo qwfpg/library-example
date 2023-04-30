@@ -15,6 +15,8 @@
                      required
 
             />
+            <label for="description">Description</label>
+            <textarea id="description" name="description" class="w-full mb-4">{{$book->description ?? ''}}</textarea>
             <x-input title="Author"
                      name="author"
                      :value="$book->author ?? ''"
