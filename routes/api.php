@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BookController;
@@ -43,6 +44,8 @@ Route::middleware(['auth:sanctum', 'employee'])->group(function () {
     Route::post('books', [BookController::class, 'store']);
     Route::post('books/{book}', [BookController::class, 'update']);
     Route::delete('books/{book}', [BookController::class, 'destroy']);
+
+    Route::apiResource('users', UserController::class);
 });
 
 Route::apiResource('books', BookController::class)->only('index', 'show');

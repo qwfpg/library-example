@@ -11,6 +11,7 @@ use App\Repositories\BookRepositoryInterface;
 use App\Services\CoverImageServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\Response;
 
 class BookController extends ModelController
 {
@@ -57,6 +58,6 @@ class BookController extends ModelController
         $this->coverImageService->handleImageDelete($book->cover);
         $this->repository->delete($book);
 
-        return response()->json(null, 204);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
