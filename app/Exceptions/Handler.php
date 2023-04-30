@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -23,12 +25,24 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->renderable(function (DatabaseException $exception) {
-            return back()->with('error', $exception->getMessage());
+        $this->renderable(function (DatabaseException $exception, $request) {
+            return $this->handleException($exception, $request);
         });
 
-        $this->renderable(function (NotificationSendingException $exception) {
-            return back()->with('error', $exception->getMessage());
+        $this->renderable(function (NotificationSendingException $exception, $request) {
+            return $this->handleException($exception, $request);
         });
     }
+
+    public function handleException(\Exception $exception, $request): JsonResponse|RedirectResponse
+    {
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return back()->with('error', $exception->getMessage());
+    }
+
 }
