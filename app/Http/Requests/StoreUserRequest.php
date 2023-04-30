@@ -2,32 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UserRoles;
-use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-
-class StoreUserRequest extends FormRequest
+class StoreUserRequest extends UserRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    protected function requiredFields(): array
     {
-        return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array|string>
-     */
-    public function rules(): array
-    {
-        return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'role' => ['required', 'string', Rule::in(UserRoles::getValues())],
-        ];
+        return ['name', 'email', 'role'];
     }
 }
