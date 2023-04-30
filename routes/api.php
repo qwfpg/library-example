@@ -30,7 +30,7 @@ Route::post('/login', function (Request $request) {
     $user = Auth::user();
     $token = $user->createToken('api-token')->plainTextToken;
 
-    return response()->json($token);
+    return response()->json(['token' => $token]);
 });
 
 
@@ -40,9 +40,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::middleware(['auth:sanctum', 'employee'])->group(function () {
-    Route::apiResource('books', BookController::class)->except(['index', 'show']);
-    Route::apiResource('categories', CategoryController::class)->except(['index', 'show']);
+    Route::post('books', [BookController::class, 'store']);
+    Route::post('books/{book}', [BookController::class, 'update']);
+    Route::delete('books/{book}', [BookController::class, 'destroy']);
 });
 
-Route::apiResource('books', BookController::class)->except(['store', 'update', 'delete']);
-Route::apiResource('categories', CategoryController::class)->except(['store', 'update', 'delete']);
+Route::apiResource('books', BookController::class)->only('index', 'show');
