@@ -22,7 +22,7 @@ class ImportBooksController extends Controller
         if ($file) {
             try {
                 $import = new BooksImport($bookRepository, $categoryRepository);
-                Excel::import($import, $file);
+                Excel::queueImport($import, $file);
             } catch (\Exception $e) {
                 return redirect()->back()->with(['error' => 'The file could not be processed.']);
             }
